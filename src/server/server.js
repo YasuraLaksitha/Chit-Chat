@@ -13,7 +13,7 @@ io.on('connection', socket => {
     socket.on('connect-user', (username) => {
         console.info(`Server :${username} joined to the chat\n`)
 
-        socket.emit('message', 'Welcome to chat')
+        socket.emit('message', 'Welcome to chat\n')
         io.emit('message', `${username} joined to the chat\n`)
     })
 
