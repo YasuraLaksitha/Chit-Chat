@@ -11,6 +11,12 @@ io.on('connection',socket=> {
     console.info('web socket started')
 })
 
-server.listen(3000, '127.0.0.1', () => {
-    console.log('server running in port 3000')
-})
+
+function startServer() {
+    server.listen(3000, '127.0.0.1', () => {
+        console.log('server running in port 3000')
+    })
+}
+
+module.exports = {startServer}
+
