@@ -1,3 +1,4 @@
+require('dotenv').config()
 const {startServer} = require('./server/server')
 const readline = require("node:readline");
 

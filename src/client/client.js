@@ -1,11 +1,11 @@
+require('dotenv').config()
 const readline = require("node:readline");
-const socket = require('socket.io-client')('http://127.0.0.1:3000')
+const socket = require('socket.io-client')(`http://${process.env.HOST}:${process.env.PORT}`)
 
 const cli = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 })
-
 
 socket.on('message', data => {
     console.info(data)
@@ -16,7 +16,6 @@ cli.write('Welcome to the chat application\n')
 let username
 
 function handleUserInputs() {
-
 
 
     function proceed(username) {
@@ -42,6 +41,7 @@ function handleUserInputs() {
             }
         })
     }
+
     proceed();
 }
 
