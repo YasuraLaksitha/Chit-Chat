@@ -11,23 +11,29 @@ io.on('connection', socket => {
 
     console.info('web socket connected\n')
 
-    socket.on('connect-user', (username) => {
-        console.info(`Server :${username} joined to the chat\n`)
+    socket.on('connect-user', (name) => {
+        socket.username = name
+        console.info(`[Server] :${socket.username} joined to the chat\n`)
 
         socket.emit('message', 'Welcome to chat\n')
-        io.emit('message', `${username} joined to the chat\n`)
+        io.emit('message', `${socket.username} joined to the chat\n`)
     })
 
-    socket.on('disconnect-user', (username) => {
-        console.info(`Server :${username}  left from the chat\n`)
-        io.emit('message', `${username} left from the chat\n`)
+    socket.on('disconnect-user', () => {
+        console.info(`[Server] :${socket.username} left from the chat\n`)
+        io.emit('message', `${socket.username} left from the chat\n`)
     })
 
-    socket.on('chat-message', (username, msg) => {
-        console.info(`Server :${username}: ${msg}\n`)
-        io.emit('message', `${username} ${msg}\n`)
+    socket.on('chat-message', (msg) => {
+        console.info(`[Server] :${socket.username}: ${msg}\n`)
+        io.emit('message', `you: ${msg}\n`)
     })
+
+    socket.on('connect_error', (error) => {
+        console.error('Connection error:', error.message);
+    });
 })
+
 
 
 function startServer() {

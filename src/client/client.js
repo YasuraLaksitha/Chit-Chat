@@ -4,54 +4,65 @@ const socket = require('socket.io-client')(`http://${process.env.HOST}:${process
 
 const cli = readline.createInterface({
     input: process.stdin,
-    output: process.stdout
+    output: process.stdout,
 })
 
 socket.on('message', data => {
-    console.info(data)
+    console.info(data+"\n")
 })
 
 cli.write('Welcome to the chat application\n')
 
 let username
 
+handleUserInputs()
+
+
 function handleUserInputs() {
 
+    function proceed() {
 
-    function proceed(username) {
-
-        cli.write('Enter option:', opt => {
+        cli.question('Enter an option (connect/chat/exit):', opt => {
             switch (opt) {
-
                 case 'connect':
+
                     cli.question('Enter username:', input => {
                         username = input
+                        socket.emit('connect-user', username)
+                        setTimeout(() => proceed(), 1000)
                     })
-                    socket.emit('connect-user', username)
                     break;
 
                 case 'chat':
-                    cli.write('Chat mode\n')
-                    handleChat()
-                    break;
+                    if (!username) {
+                        cli.write('You must connect first\n')
+                        return proceed()
+                    }
+                    cli.write('Chat mode on\n')
+                    return handleChat()
 
                 case 'exit':
                     socket.emit('disconnect-user', username)
-                    process.exit(0);
+                    return process.exit(0);
+
+                default:
+                    cli.write('Invalid input\n')
+                    return proceed()
             }
+
         })
     }
 
     proceed();
 }
 
-handleUserInputs()
-
 function handleChat() {
-    cli.question('msg:', msg => {
+    cli.question('', msg => {
         if (msg !== 'exit') {
-            socket.emit('chat-message', username, msg)
+            socket.emit('chat-message', msg)
             return handleChat()
         }
+        cli.write('Chat mode of\n')
+        return handleUserInputs()
     })
 }
