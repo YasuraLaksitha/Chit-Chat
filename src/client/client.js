@@ -1,5 +1,5 @@
 const readline = require("node:readline");
-const socket = require('socket.io-client')('http://localhost:3000')
+const socket = require('socket.io-client')('http://127.0.0.1:3000')
 
 const cli = readline.createInterface({
     input: process.stdin,
@@ -17,9 +17,7 @@ let username
 
 function handleUserInputs() {
 
-    cli.question('Enter username:', input => {
-        username = input
-    })
+
 
     function proceed(username) {
 
@@ -27,6 +25,9 @@ function handleUserInputs() {
             switch (opt) {
 
                 case 'connect':
+                    cli.question('Enter username:', input => {
+                        username = input
+                    })
                     socket.emit('connect-user', username)
                     break;
 
